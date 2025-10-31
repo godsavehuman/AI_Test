@@ -1,0 +1,31 @@
+
+I want to build a workflow to research on any topic in arxiv and generate a tree of related projects
+
+I want to utlize this website to extract key data 
+https://papers.cool/arxiv/
+
+
+this request will get general info about paper
+https://papers.cool/arxiv/2505.13888
+
+this will get AI summary of the paper
+https://papers.cool/arxiv/kimi?paper=2505.13888
+
+on the general info page, there is a button called [REL] and on click, it will run a search to get related topics
+
+https://papers.cool/arxiv/search?query=heads,filtering,predicate,llms,filter,lms,item,reapplied,list,tasks
+
+this url retrieves a list of papers published in given category, sorted by date desc 
+https://papers.cool/arxiv/cs.RO
+
+
+
+In this flow, I want to build 
+a list of research with the name of the research and one sentence to describe what it does 
+
+
+
+
+
+this site provide info about whether code related to paper exist 
+https://huggingface.co/papers/2508.03680
