@@ -1,0 +1,149 @@
+Yes — you can (and researchers do) extract the “core logic” and workflows from other repos and strip unused dependencies, but it’s an active research area with several complementary techniques (program-slicing, static/dynamic analysis, dependency-pruning / tree-shaking, and LLM-assisted code comprehension). Below I summarize the relevant research areas, practical techniques, limits/risks, and give a concrete, LLM-friendly pipeline (including pseudo-code) you can use to extract workflows/tools from a repo.
+
+1) Research areas that directly apply (with citations)
+
+Program slicing — isolating the subset of program statements that affect a given variable or behavior (static and dynamic slicing). This is the classic formal technique for extracting the relevant code for a property or task. Recent work looks at combining LLMs with slicing for better code comprehension. 
+arXiv
++1
+
+Dependency / bloated-dependency analysis — papers and studies that identify packages/dependencies that aren’t used at runtime, and approaches (trace-based or static) to detect and remove them. This is the direct literature for “remove all other dependencies.” 
+arXiv
++1
+
+Tree-shaking / bundler optimization — industry practice and research for removing unused exports / code paths when producing a runtime bundle (e.g., JS bundlers, WebAssembly slicing). Useful when you want a tiny distributable with only core logic. 
+eprints.umsida.ac.id
++1
+
+Static and dynamic code analysis tools — a broad literature and many practical tools for extracting call graphs, usage graphs, type info, and runtime traces. These are the building blocks for the extraction pipeline. 
+OWASP
++1
+
+Mining repos & code summarization / clone detection — research on mining many repos to find idioms, clones, and to generate summaries or boilerplate removal; helpful for recognizing reusable workflow patterns and extracting them. 
+cs.purdue.edu
+
+2) Practical pipeline to extract a repo’s core workflow / tools (high level)
+
+Use a hybrid approach (static + dynamic + semantic/LLM) for best results:
+
+Scoping / goal definition
+
+Define the behavior or workflow you want to extract (e.g., “data ingestion → preprocess → model inference → output”). This is crucial: program slicing needs a slicing criterion (target variables, outputs, function names).
+
+Static analysis (fast filter)
+
+Build call-graphs, import graphs, and control-flow/usage maps (AST parsing, symbol resolution).
+
+Identify candidate files/functions that touch your outputs. Tools: language AST parsers, static analyzers (ESLint/TS Server, Pyflakes, clang tooling, etc.). 
+GitHub
++1
+
+Dynamic tracing (confirm runtime relevance / remove bloated deps)
+
+Run representative tests or tiny runs with runtime tracing (instrument imports, file access, function calls). This finds dependencies actually exercised (trace-based bloated dependency detection). Useful to rule out dev/test code and unused packages. 
+arXiv
+
+Program slicing / narrowing
+
+Apply static/dynamic slicing with your chosen slice criterion (e.g., final output variable, exported function). This produces a minimal set of statements/modules needed for the behavior. Modern approaches combine static and dynamic slices for precision. 
+ACM Digital Library
+
+Semantic compression with LLMs
+
+Use an LLM to: summarize the candidate code; identify unnecessary glue (e.g., logging, telemetry); propose refactorings that remove framework or infra-specific code; and to rewrite glue into a minimal adapter interface. Recent papers explore LLMs assisting slicing and comprehension. 
+arXiv
+
+Tree-shaking / bundling
+
+For languages/targets with bundlers (JS, WASM), perform tree-shaking to remove unused exports and produce a lean artifact. 
+eprints.umsida.ac.id
+
+Manual verification + tests
+
+Run unit/integration tests or smoke tests to verify behavior matches original. Where tests are missing, create lightweight checks (golden files, example inputs → outputs).
+
+Iterate & produce adapter
+
+Wrap the extracted core into a small, well-documented interface (API) and provide adapters for needed dependencies (mock small calls rather than whole frameworks).
+
+3) Tools & example open-source helpers
+
+Static analysis / call graph: language AST toolchains, SonarQube/ Snyk Code, clang/pyan, analysis-tools-dev lists many static analyzers. 
+OWASP
++1
+
+Dependency scanners / stack analyzers: specfy/stack-analyser (detects tech & deps across repos), Snyk, OSS scanners for spotting unused or vulnerable deps. 
+GitHub
++1
+
+Trace-based tools / dynamic analysis: research prototypes for trace-based detection of bloated deps; you can implement lightweight tracing by instrumenting imports/file access or running in an agent that logs loaded modules. 
+arXiv
+
+LLM assistance: use LLM prompts to summarize functions, generate tests, detect irrelevant code, or propose minimal re-implementations. Recent work shows LLMs help program slicing and comprehension. 
+arXiv
+
+4) Risks & limitations
+
+Undecidable or context-dependent behavior: static analysis can be imprecise for dynamic languages or reflection—some code paths only show up at runtime. (Dynamic analysis helps but can miss rare paths.)
+
+Hidden side-effects: some “unused” code still affects runtime (monkey-patching, global state). Removing it may silently break behavior.
+
+Licensing / compliance: extracting core logic might create license/attribution obligations (be careful with GPL / copyleft).
+
+Tests needed: without tests or representative inputs, you may remove code that’s rarely executed but required in edge cases.
+
+LLM hallucinations: when using LLMs to rewrite or compress code, always verify generated code with tests and reviews.
+
+5) Concrete LLM-friendly pseudo-workflow for extraction
+
+You can build the extraction pipeline as a reproducible script that combines tooling and LLM steps. Here’s high-level pseudo-code you can adapt:
+
+# INPUT:
+#   repo_path: path to checked-out repo
+#   target_spec: { entry_point: "pkg.api.main", outputs: ["result.json"], examples: [ ... ] }
+
+# STEP 1: static graph
+cg = build_call_graph(repo_path)
+imports = build_import_graph(repo_path)
+
+# STEP 2: candidate set via static reachability from entry_point
+candidates = reachable_nodes(cg, from=target_spec.entry_point)
+
+# STEP 3: instrument + dynamic run
+start_trace_server()
+run_example(target_spec.examples)   # run with representative inputs
+trace = collect_runtime_trace()
+runtime_used = modules_used(trace)   # modules/files actually loaded/executed
+
+# STEP 4: intersect static candidates & runtime_used
+core_candidates = candidates ∩ runtime_used
+
+# STEP 5: program slicing (narrow down to statements/functions)
+slice = compute_slice(core_candidates, criterion=target_spec.outputs)
+
+# STEP 6: LLM compression & refactor suggestion
+prompt = """
+I have the following code snippets (list), their call graph (attach), and runtime trace (attach).
+Goal: create a minimal standalone module that implements <target_spec>.
+Please:
+  - identify glue/framework-specific code to remove
+  - propose a small adapter API with <= 5 functions
+  - rewrite minimal code where possible
+"""
+llm_output = LLM.run(prompt, attachments={slice, cg, trace})
+
+# STEP 7: auto-generate tests from examples & run
+tests = generate_tests_from_examples(target_spec.examples)
+run_tests_on_rewritten_code(tests)
+
+# OUTPUT: tiny module + adapter + test results
+
+6) Example research that specifically aligns with this idea
+
+LLMs for program slicing — shows LLMs can assist static/dynamic slicing and improve precision of slices for comprehension and debugging. This directly supports using LLMs as the “semantic compressor” step. 
+arXiv
+
+Trace-based detection of bloated deps — demonstrates practical methods to detect unused dependencies in Node/JS projects (you can adopt the same idea). 
+arXiv
+
+Tree-shaking literature & bundler optimizations — mature engineering approaches for removing unused code in final artifacts; helpful for packaging the extracted core. 
+eprints.umsida.ac.id

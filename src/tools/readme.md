@@ -1,3 +1,6 @@
+
+ToolUniverse
+
 Overview
 Just as HTTP standardizes client-server communication across the web, ToolUniverse implements an AI-Tool Interaction Protocol that standardizes how AI models interact with scientific tools. This protocol abstracts away the complexity of 600+ heterogeneous tools (machine learning models, databases, APIs, robotics systems) behind a unified interface.
 
