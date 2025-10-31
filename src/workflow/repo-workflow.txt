@@ -44,6 +44,11 @@ arXiv
 
 Program slicing / narrowing
 
+
+https://github.com/zhangyz/llvm-slicing/tree/master
+
+
+
 Apply static/dynamic slicing with your chosen slice criterion (e.g., final output variable, exported function). This produces a minimal set of statements/modules needed for the behavior. Modern approaches combine static and dynamic slices for precision. 
 ACM Digital Library
 
