@@ -79,6 +79,26 @@ https://www.swebench.com/
 find  the related output I am looking for
 
 
+
+project features
+
+extract features from project 
+https://agentflow.stanford.edu/
+
+if there is no value that's comparable, just save feature name(metric name) and entity name to above table
+
+
+extract workflow from paper 
+given a paper, extract key accomplishment and workflow 
+
+1. use one sentence to descripe the project , save identifier, name and description, url
+
+https://arxiv.org/html/2510.05592v1
+
+2. extract any entity info and save to entity comparision flow 
+
+3. extract workflow mentioned in the article and save to workflow 
+
 pixeltable
 
 
