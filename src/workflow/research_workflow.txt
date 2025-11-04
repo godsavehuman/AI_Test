@@ -66,6 +66,22 @@ Claude Opus 4.1         $15
 
 
 
+        Metric 
+entity  value (foramt: number, percentage, money)
+
+make it easy to query by metric, entity can expand indefintely 
+metric can have relations so we can choose to get related metrics 
+
+
+
+given this link 
+https://www.swebench.com/
+find  the related output I am looking for
+
+
+pixeltable
+
+
 
 this site provide info about whether code related to paper exist 
 https://huggingface.co/papers/2508.03680
