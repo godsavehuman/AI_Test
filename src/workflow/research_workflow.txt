@@ -20,9 +20,49 @@ https://papers.cool/arxiv/cs.RO
 
 
 
+
+result driven - first give requirement and expected result, then let the agent run 
+
 In this flow, I want to build 
 a list of research with the name of the research and one sentence to describe what it does 
 
+identify 
+success criteria first , what is the final result user need and how to confirm what you have meet the expectation
+
+
+given a research paper 
+run a comprehensive research on the paper to save info such as
+
+name of research - one sentense description 
+
+from the research, we want to find any 
+
+
+
+Get all benchmark and leaderboard related to AI, robotics
+
+I expect benchmark name and a table of leaderboard with top 5 performers 
+
+for example 
+
+SWE Bench - Bash Only  score
+Claude 4.5 Sonnet       70.60
+GPT-5                   65.00
+
+Aider Polyglot
+GPT-5 (high)            88.0%
+Gemini 2.5 Pro          83.1%
+
+
+GSO
+Claude-4.5-Sonnet       14.7%	
+GPT-5 (high)	        6.9%
+
+
+the data structure should also be extensible to make it possible to compare any product/services on any given metrics
+Input Cost / 1M tokens
+GPT-5                   $1.25
+Claude Opus 4.1         $15
 
 
 
