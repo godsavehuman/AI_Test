@@ -101,7 +101,23 @@ https://arxiv.org/html/2510.05592v1
 
 pixeltable
 
+RL fineturning
+a reliable verifier is most crucial in RL fineturning, not rl algorithm
+which means the tests that got run to verify whether final result is correct is most important - verifier model (stronger model, even maybe vl omni model)
+
+aggregate multiple answer is better than 1 answer -- multiple ways is better than 1 way- we should allow that
+
+retrieve + reasoning is better than just reasoning, before reasoning, retrieve something similars - similarity search
 
 
 this site provide info about whether code related to paper exist 
 https://huggingface.co/papers/2508.03680
+
+humanroid 
+
+https://www.youtube.com/watch?v=6ioWqCTAF8M
+
+
+open asr leaderboard 
+
+https://huggingface.co/spaces/hf-audio/open_asr_leaderboard
