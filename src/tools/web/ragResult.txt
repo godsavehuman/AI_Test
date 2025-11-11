@@ -1,0 +1,72 @@
+
+Manus
+
+
+# Retrieval-Augmented Generation (RAG) Benchmarks and Leaderboards
+
+Retrieval-Augmented Generation (RAG) systems are evaluated across various dimensions, including overall performance, the efficiency of the retrieval component (e.g., rerankers), and the model's propensity for generating false information (hallucinations or confabulations). The following table summarizes the key RAG-related benchmarks and their respective leaderboards, based on recent data.
+
+## Comprehensive RAG Benchmark Leaderboards
+
+| Benchmark Name | Focus Area | Key Metrics | Top-Ranked Model | Score | Source |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **DRAGON: Dynamic RAG Benchmark On News** | Overall RAG System Performance (Retrieval + Generation) | Total Score (Weighted average of Retrieval and Generation metrics), Retrieval (avg), Generation (avg) | RuadaptQwen2.5-32B-Instruct (9449f3) | 0.5736 (Total Score) | [1] |
+| **Agentset Reranker Leaderboard** | Reranking Component Performance | ELO Score, nDCG@10, Latency (ms) | Zerank 1 | 1642 (ELO Score) | [2] |
+| **LLM Confabulation (Hallucination) Leaderboard for RAG** | Hallucination/Confabulation Rate | Weighted Confabulation/Non-Response Rate, Confabulation %, Non-Response % | GPT-5 (medium reasoning) | 10.34 (Weighted) | [3] |
+
+## Detailed Leaderboard Data
+
+### 1. DRAGON: Dynamic RAG Benchmark On News
+
+The DRAGON benchmark evaluates the end-to-end performance of RAG systems using both generative and retrieval metrics across different question types (simple, comparison, multi-hop, conditional). The scores below are based on the "Overall Table" from the latest version.
+
+| Rank | Model | Embeddings | Top k | Retrieval (avg) | Generation (avg) | Total Score | Last Updated |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| 1 | RuadaptQwen2.5-32B-Instruct (9449f3) | multilingual-e5-large-instruct\_0 | 2 | 0.6769 | 0.4702 | **0.5736** | 2025-07-20 |
+| 2 | RuadaptQwen2.5-32B-Instruct (bf559d) | multilingual-e5-large-instruct\_1 | 5 | 0.6362 | 0.3892 | **0.5127** | 2025-07-20 |
+| 3 | RuadaptQwen2.5-32B-Instruct (af59b6) | FRIDA\_0 | 5 | 0.5982 | 0.3762 | **0.4872** | 2025-07-20 |
+| 4 | RuadaptQwen2.5-7B-Instruct | e5-mistral-7b-instruct | 20 | 0.6501 | 0.159 | **0.4046** | 2025-07-03 |
+| 5 | Qwen2.5-7B-Instruct (d6ccf3) | FRIDA\_2 | 20 | 0.6238 | 0.2411 | **0.4324** | 2025-07-03 |
+
+### 2. Agentset Reranker Leaderboard
+
+This benchmark focuses on the **reranking** component of the RAG pipeline, which is crucial for improving retrieval accuracy by reordering initially retrieved documents. The ELO score is derived from head-to-head comparisons judged by an LLM (GPT-5).
+
+| Rank | Model Name | ELO Score | nDCG@10 | Latency (ms) | Price / 1M | License |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| 1 | **Zerank 1** | **1642** | 0.676 | 1126 | $0.025 | cc-by-nc-4.0 |
+| 2 | Voyage AI Rerank 2.5 | 1629 | 0.680 | 610 | $0.050 | Proprietary |
+| 3 | Contextual AI Rerank v2 Instruct | 1550 | 0.687 | 3010 | $0.050 | cc-by-nc-4.0 |
+| 4 | Voyage AI Rerank 2.5 Lite | 1510 | 0.679 | 607 | $0.020 | Proprietary |
+| 5 | BAAI/BGE Reranker v2 M3 | 1468 | 0.686 | 1891 | $0.020 | Apache 2.0 |
+
+### 3. LLM Confabulation (Hallucination) Leaderboard for RAG
+
+This benchmark specifically evaluates the LLM's ability to avoid **confabulations** (hallucinations) when asked misleading questions based on provided documents. The "Weighted" score is a 50-50 combination of Confabulation % (lower is better) and Non-Response % (lower is better).
+
+| Rank | Model | Confab % | Non-Resp % | Weighted Score |
+| :--- | :--- | :--- | :--- | :--- |
+| 1 | **GPT-5 (medium reasoning)** | 10.9 | 9.8 | **10.34** |
+| 2 | Gemini 2.5 Pro Preview 05-06 | 5.9 | 15.3 | 10.62 |
+| 3 | Grok 3 Mini Beta (high) | 6.9 | 14.7 | 10.80 |
+| 4 | Gemini 2.5 Pro Exp 03-25 | 4.0 | 17.6 | 10.80 |
+| 5 | GLM-4.5 | 7.9 | 14.7 | 11.30 |
+
+## Other Notable RAG Benchmarks
+
+In addition to the leaderboards above, the following benchmarks are also significant in the RAG evaluation landscape:
+
+*   **MIRAGE-Bench** [4]: This is a **Multilingual RAG Evaluation Benchmark** that uses a cost-effective surrogate judge (a regression model) trained on heuristic features and GPT-4o-based pairwise comparisons to create a synthetic arena leaderboard. It evaluates 21 multilingual-focused LLMs across 18 languages, with closed-source models like GPT-4 and GPT-4o currently dominating the multilingual generation task.
+*   **RAGEval** [5]: A framework designed to assess RAG systems by automatically generating documents, questions, answers, and references, using metrics like Completeness and Consistency.
+*   **Ragas** [6]: A framework for RAG evaluation that focuses on four key metrics: **Faithfulness** (how factual the generated answer is), **Answer Relevance**, **Context Precision**, and **Context Recall**. While Ragas is a framework and not a single leaderboard, it is widely used for custom RAG pipeline evaluation.
+
+## References
+
+[1] [RAG Benchmark Leaderboard - a Hugging Face Space by ai-forever](https://huggingface.co/spaces/ai-forever/rag-leaderboard)
+[2] [Reranker Leaderboard - Agentset](https://agentset.ai/leaderboard/rerankers)
+[3] [GitHub - lechmazur/confabulations: Hallucinations (Confabulations) Document-Based Benchmark for RAG.](https://github.com/lechmazur/confabulations)
+[4] [MIRAGE-Bench: Automatic Multilingual Benchmark Arena for Retrieval-Augmented Generation Systems](https://mirage-bench.github.io/)
+[5] [RAGEval: Scenario Specific RAG Evaluation](https://arxiv.org/abs/2408.01262)
+[6] [Evaluation Dataset - Ragas Documentation](https://docs.ragas.io/en/stable/concepts/components/eval_dataset/)
+
+
