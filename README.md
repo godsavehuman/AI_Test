@@ -47,6 +47,26 @@ Next steps you might try:
 - Add concurrency tests or file-locking for multi-process safety.
 
 
+
+
+TODO: Need to verify 
+
+Agent has ability to read state, tool list, query knowledge(fact, principle, experience) and existing workflow 
+
+Agent has ability to update state when things changed, create or update tools, update knowledge and save verified workflow
+
+Agent can create test case or list out test plan before implementation and ask for human feedback, this is to ensure we are aligned with goals
+
+Agent can generate a plan of action(workflow) before implementation and ask for human approval of actions that will be taken 
+
+Agent can summarize and consolidate based on env interaction and save lesson learnd to each area above
+
+
+Areas 
+
+state
+current state of self or entity 
+
 knowledge base
 look through to find past experience 
 
